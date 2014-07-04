@@ -22,11 +22,10 @@ static xpc_connection_t initialize_host_connection(xpc_object_t event)
     xpc_connection_set_event_handler(connection, ^(xpc_object_t event) {
         xpc_type_t type = xpc_get_type(event);
 
-        // If the remote end of this connection has gone away then stop download
         if (XPC_TYPE_ERROR == type &&
             XPC_ERROR_CONNECTION_INTERRUPTED == event) {
             // the app has gone away here.
-            asl_log(NULL, NULL, ASL_LEVEL_NOTICE, "APP HAS GONE AWAY!!!\n");
+            asl_log(NULL, NULL, ASL_LEVEL_NOTICE, "APP HAS GONE AWAY!\n");
         }
     });
 
@@ -119,8 +118,6 @@ static void event_handler(xpc_connection_t peer)
 
 static void start_xpc()
 {
-    //handler_resolve = resolve;
-    //handler_reject = reject;
     xpc_main(event_handler);
 }
 
