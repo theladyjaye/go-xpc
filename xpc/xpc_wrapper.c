@@ -1,9 +1,7 @@
 //
 //  xpc_wrapper.c
-//  cableknit_xpc_s3_upload
 //
-//  Created by Adam Venturella on 4/5/14.
-//  Copyright (c) 2014 BLITZ. All rights reserved.
+//  Created by Adam Venturella on 7/3/14.
 //
 
 #ifndef xpc_impl
