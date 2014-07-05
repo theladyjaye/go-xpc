@@ -14,6 +14,7 @@ extern void ReceivedErrorEvent(char* err);
 extern void ReceivedPayload(void *payload, int length);
 
 static xpc_connection_t host_connection;
+static dispatch_queue_t payloadQueue;
 
 static xpc_connection_t initialize_host_connection(xpc_object_t event)
 {
@@ -97,7 +98,9 @@ static void peer_event_handler(xpc_connection_t peer, xpc_object_t event)
         int64_t length = xpc_dictionary_get_int64(event, "length");
         const void *bytes = xpc_dictionary_get_data(event, "payload", (size_t *)&length);
 
-        ReceivedPayload((void*)bytes, length);
+        dispatch_async(payloadQueue, ^{
+            ReceivedPayload((void*)bytes, length);
+        });
     }
 }
 
@@ -118,8 +121,7 @@ static void event_handler(xpc_connection_t peer)
 
 static void start_xpc()
 {
+    payloadQueue = dispatch_queue_create("com.go-xpc.payloads", NULL);
     xpc_main(event_handler);
 }
-
-
 #endif
