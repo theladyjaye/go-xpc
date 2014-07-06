@@ -15,6 +15,8 @@ stuff all there at the time of this writing).
 
 Sample usage:
 
+### From Go:
+
 ``` go
 package main
 
@@ -36,6 +38,35 @@ func main() {
     xpc.Register(sample)
     xpc.Start()
 }
+```
+
+
+
+### From Cocoa App (Swift):
+
+```swift
+import Cocoa
+
+@objc class Foo {
+
+    func Bazzale(args: Array<AnyObject>){
+        println("Bazzle Got Args: \(args)")
+    }
+}
+
+// ... later in some func ...
+
+func initializeXPCService(){
+    connection = XPCConnection(name:"com.blitzagency.officebeats-api")
+    connection.register(Foo())
+    connection.resume()
+
+    connection.call("Sample.Test", withArgs: [1,2,3]) {
+        (value) -> () in
+        println(value)
+    }
+}
+
 ```
 
 
