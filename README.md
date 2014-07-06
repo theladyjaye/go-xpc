@@ -47,9 +47,10 @@ func main() {
 ```swift
 import Cocoa
 
+// @objc is required here.
 @objc class Foo {
 
-    func Bazzale(args: Array<AnyObject>){
+    func Bar(args: Array<AnyObject>){
         println("Bazzle Got Args: \(args)")
     }
 }
@@ -70,3 +71,39 @@ func initializeXPCService(){
 ```
 
 
+
+### you can even call back from your Go XPC Service into your app:
+
+Building on the *Go* example above:
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/aventurella/go-xpc/xpc"
+)
+
+type Sample struct{}
+
+func (s *Sample) Test(args *[]interface{}, reply *interface{}) error {
+    fmt.Println("CALLED SAMPLE.TEST!!!")
+    fmt.Println(args)
+
+    // Note that we MUST use selector style here,
+    // aka: passingAnArgEndsWithAColon:
+    //
+    //-------------------------------------
+        xpc.CallHost("Foo.Bar:", args)
+    //-------------------------------------
+    //
+
+    return nil
+}
+
+func main() {
+    sample := new(Sample)
+    xpc.Register(sample)
+    xpc.Start()
+}
+```
